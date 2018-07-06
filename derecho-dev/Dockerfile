@@ -27,7 +27,7 @@ RUN apt-get -y install git
 # libtool, m4, automake
 RUN apt-get -y install libtool m4 automake
 
-# COPY derecho.clone.sh /usr/local/bin/
-# RUN ["chmod", "+x", "/usr/local/bin/derecho.clone.sh"]
-# COPY derecho.build.sh /usr/local/bin/
-# RUN ["chmod", "+x", "/usr/local/bin/derecho.build.sh"]
+COPY derecho.clone.sh /usr/local/bin/
+RUN ["chmod", "+x", "/usr/local/bin/derecho.clone.sh"]
+COPY derecho.build.sh /usr/local/bin/
+RUN ["chmod", "+x", "/usr/local/bin/derecho.build.sh"]
