@@ -1,26 +1,26 @@
 # derecho-docker
-This project provides a docker container image for testing and developing software with (Derecho)[https://github.com/Derecho-Project/derecho-unified]. Derecho is an open-source C++ distributed computing toolkit that provides strong forms of distributed coordination and consistency at RDMA speeds. Thanks to hardware compatible design in Derecho, you can develop or test it without real RDMA hardware.
+This project provides a docker container image for testing and developing software with (Derecho)[https://github.com/Derecho-Project/derecho-unified]. Derecho is an open-source C++ distributed computing toolkit that provides strong forms of distributed coordination and consistency at RDMA speeds. Thanks to hardware independent design in Derecho, you can develop or test it without real RDMA hardware.
 
 # To build the image :
-
-clone the repo at: https://github.com/songweijia/derecho-docker.git.
-cd into the directory derecho-dev and give command [It may take around 3~5 min depending on network throughput]
+you can build the docker image without clone this repository:
+```
+$ docker build -t derecho-dev https://github.com/Derecho-Project/derecho-docker.git#:derecho-dev
+```
+Or, if you are interested in customizing this image, clone the repo at: https://github.com/songweijia/derecho-docker.git.
+`cd` into the directory `derecho-docker/derecho-dev` and issue the command [It may take around 3~5 min depending on network throughput]
 ```
 $ docker build -t derecho-dev .
 ```
-or 
-```
-$ docker build -t derecho-dev https://github.com/songweijia/derecho-docker.git#:derecho-dev
-```
 # To run the image and build Derecho source code:
+Issue the following command to start a container with `derecho-dev` image:
 ```
 $ docker run -it derecho-dev /bin/bash
 ```
-Then, move to home directory(/root/)
+Now, the terminal window should be in the container context. `cd` to home directory(/root/)
 ```
 $ cd ~
 ```
-Now, pull the derecho source code and buid it [It may take around 6~10 min depending on computer performance]:
+Pull the derecho source code and build it [It may take around 6~10 min depending on computer performance]:
 ```
 $ build-derecho.sh Release
 ```
@@ -31,10 +31,10 @@ $ build-derecho.sh Release persistent-delta
 Please check (derecho project website)[https://github.com/Derecho-Project/derecho-unified] for available branches.
 
 # To configure and run Derecho
-A Derecho application composed of multiple nodes talk to each other. Each node is assigned with an integer identifier(ID). One of the nodes, usually node `0`, is designated as the leader when system starts. To start a Derecho node, the Derecho component needs to know who am I and who is the leader. In addition, it needs to know which communication protocol, e.g. TCP/IP or verbs RDMA, and which interfaces to use for talking with other nodes. There are many configuration knobs but
+A Derecho application is composed of multiple nodes that talk to each other. Each node is assigned an integer identifier(ID). One of the nodes, usually node `0`, is designated as the leader when system starts. To start a Derecho node, the Derecho component needs to know my ID/IP address and the IP address of the leader. In addition, it needs to know which communication protocol, e.g. TCP/IP or verbs RDMA, and which interfaces to use for talking with other nodes. There are many configuration knobs but
 `config-derecho.sh` helps with the minimum configurations to run derecho.
 
-Let's start with the `bandwith_test`, which evaluates the data throughput of a Derecho group. We want to test a small group with two nodes talking to each other using TCP/IP. Let's repeat the previous step to create another container. Now, we `cd` to `/root` in both of the containers. Run `ifconfig` to find their network interface and ip address.
+Let's start with the `bandwith_test`, which evaluates the data throughput of a Derecho group. We want to test a small group with two nodes talking to each other using TCP/IP. Let's repeat the previous steps to run another `derecho-dev` container and build Derecho source code. Now, we `cd` to `/root` in both of the containers. Run `ifconfig` to find their network interface and ip address.
 ```
 # ifconfig eth0
 eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:02  
@@ -45,7 +45,7 @@ eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:02
           collisions:0 txqueuelen:0 
           RX bytes:23729106695 (23.7 GB)  TX bytes:152899589 (152.8 MB)
 ```
-Let's assume that the two containers A and B both use interface `eth0`. A's IP address is `172.17.0.2` and B's IP address is `172.17.0.3`. Let's assign node id `0` to A, and '1' to B. And we designate A as the leader. Then issue the following commond to configure node A:
+Let's assume that the two containers A and B both use interface `eth0`. A's IP address is `172.17.0.2` and B's IP address is `172.17.0.3`. Let's assign node id `0` to A, and `1` to B. And we designate A as the leader. Then issue the following commond to configure node A:
 ```
 # config-derecho.sh
 Usage: /usr/local/bin/config-derecho.sh <leader ip> <local ip> <local id> [provider,default to 'sockets'] [domain,default to 'eth0']
