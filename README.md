@@ -6,7 +6,7 @@ you can build the docker image without clone this repository:
 ```
 $ docker build -t derecho-dev https://github.com/Derecho-Project/derecho-docker.git#:derecho-dev
 ```
-Or, if you are interested in customizing this image, clone the repo at: https://github.com/songweijia/derecho-docker.git.
+Or, if you are interested in customizing this image, clone the repo at: https://github.com/Derecho-Project/derecho-docker.git.
 `cd` into the directory `derecho-docker/derecho-dev` and issue the command [It may take around 3~5 min depending on network throughput]
 ```
 $ docker build -t derecho-dev .
