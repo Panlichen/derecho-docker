@@ -1,6 +1,12 @@
 # derecho-docker
 This project provides a docker container image for testing and developing software with (Derecho)[https://github.com/Derecho-Project/derecho-unified]. Derecho is an open-source C++ distributed computing toolkit that provides strong forms of distributed coordination and consistency at RDMA speeds. Thanks to hardware independent design in Derecho, you can develop or test it without real RDMA hardware.
 
+Our testing is performed primarily on an Intel cluster of 16 nodes equipped with 100Gbps Mellanox RDMA.  Derecho itself can be configured to use this RDMA hardware, or to run over TCP instead.  
+
+We have also experimented with Derecho at much larger scale on HPC supercomputers.  This can be difficult to do: the startup of a large configuration can put a lot of stress on the datacenter file system and TCP layer (even in RDMA mode, we need "helper" connections which are based on TCP), and you might find it necessarily to launch Derecho processes in batches of 25 or 50 at a time.  As such, we don't recommend experimenting with large configurations until you have successful experience with smaller ones.
+
+One further comment: Derecho is not really intended for large configurations that would run in heavily virtualized environments.  So even though you "could" potentially run 100 copies of this docker container on one machine, we guarantee that even in TCP mode, doing that would be unsuccessful -- all sorts of timeouts would occur, and the system would certainly crash.  You should be able to run 2 or 3 copies on one machine in TCP mode, for development and debugging of your applications, but we wouldn't go much beyond that.
+
 # To build the image :
 you can build the docker image without clone this repository:
 ```
