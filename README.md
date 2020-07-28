@@ -1,3 +1,4 @@
+[TOC]
 # derecho-docker
 This project provides a docker container image for testing and developing software with [Derecho](https://github.com/Derecho-Project/derecho) and [Cascade](https://github.com/Derecho-Project/cascade). Derecho is an open-source C++ distributed computing toolkit that provides strong forms of distributed coordination and consistency at RDMA speeds. Thanks to hardware independent design in Derecho, you can develop or test it without real RDMA hardware. Cascade is a LEGO-like distributed storage hierarchy for Cloud applications. It wraps distributed persistent storage and memory resources into a high-performance and fault-tolerant storage system for applications like IoT.
 
@@ -27,7 +28,11 @@ Now derecho and cascade have been compiled and installed in the image, you just 
 
 With kubernetes, managing multiple nodes is more convenient.
 
-First, start pods withs `derecho-dev` image, for example, we strat 3 pods:
+First, create `derecho-workspace` namespace with
+```bash
+kubectl create namespace derecho-workspace
+```
+Second, start pods withs `derecho-dev` image, for example, we strat 3 pods:
 ```bash
 kubectl apply -f derecho-deployment.yaml
 ```
@@ -37,7 +42,36 @@ Then generate `derecho.cfg` for them:
 ```bash
 ./config-derecho-pods.sh
 ```
-This script can set `LEADER_IP`, `LOCAL_IP`, and `LOCAL_ID` in `/derecho.cfg`, and the environment variable `DERECHO_CONF_FILE` has been set to `/derecho.cfg` in Dockerfile, so you can run tests and applications freely.
+This script can set `LEADER_IP`, `LOCAL_IP`, and `LOCAL_ID` in `/derecho.cfg`, and the environment variable `DERECHO_CONF_FILE` has been set to `/derecho.cfg` in Dockerfile.
+
+When you see output like below, you can run tests and applications freely.
+```bash
+On node 10.217.0.105 (id: 0, leader: 10.217.0.105)
+Configuration is successfully generated in file: derecho.cfg.
+The 'DERECHO_CONF_FILE' environment variable has been set to this file: /derecho.cfg
+=========================
+
+On node 10.217.0.77 (id: 1, leader: 10.217.0.105)
+Configuration is successfully generated in file: derecho.cfg.
+The 'DERECHO_CONF_FILE' environment variable has been set to this file: /derecho.cfg
+=========================
+
+On node 10.217.0.53 (id: 2, leader: 10.217.0.105)
+Configuration is successfully generated in file: derecho.cfg.
+The 'DERECHO_CONF_FILE' environment variable has been set to this file: /derecho.cfg
+=========================
+
+On node 10.217.0.15 (id: 3, leader: 10.217.0.105)
+Configuration is successfully generated in file: derecho.cfg.
+The 'DERECHO_CONF_FILE' environment variable has been set to this file: /derecho.cfg
+=========================
+
+On node 10.217.0.82 (id: 4, leader: 10.217.0.105)
+Configuration is successfully generated in file: derecho.cfg.
+The 'DERECHO_CONF_FILE' environment variable has been set to this file: /derecho.cfg
+=========================
+```
+
 
 # To configure and run Derecho (<span id="jump">the old way</span>)
 Issue the following command to start a container with `derecho-dev` image:
@@ -133,3 +167,8 @@ rm -r .plog
 ```
 
 For more experiments and details on Derecho, please refer to the [Derecho project](https://github.com/Derecho-Project/derecho) and [Cascade project](https://github.com/Derecho-Project/cascade).
+
+# For cascade service
+You can replace the `derecho.cfg.template` and add your own on-critical-datapath library with volumes like `derecho-deployment-with-cfg.yaml` shows.
+
+>TODO: show how to run cascade service.
