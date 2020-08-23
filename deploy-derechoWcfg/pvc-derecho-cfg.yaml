@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: derecho-cfgs-pvc
+  namespace: derecho-workspace
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Mi
+  storageClassName: nfs
+  selector:
+    matchLabels:
+      pv: derecho-cfgs-pv
