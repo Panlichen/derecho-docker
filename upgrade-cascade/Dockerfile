@@ -1,6 +1,6 @@
-FROM derecho-dev
+FROM poanpan/derecho-dev:v1
 
-MAINTAINER myles.l.pan@gmail.com
+LABEL AUTHER=myles.l.pan@gmail.com
 
 COPY pull-and-rebuild.sh /root/upgrade/pull-and-rebuild.sh
 

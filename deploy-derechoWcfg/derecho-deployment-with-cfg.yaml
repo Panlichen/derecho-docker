@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: derecho-worker
 spec:
-  replicas: 5
+  replicas: 6
   selector:
     matchLabels:
       app.kubernetes.io/name: derecho-worker
