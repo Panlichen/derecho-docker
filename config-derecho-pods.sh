@@ -8,6 +8,17 @@ IP_ARRAY=()
 POD_ARRAY=()
 
 LEADER_IP=""
+# add support to config provider
+echo "Usage: $0 <leader ip> <local ip> <local id> [provider,default to 'sockets', can also use 'verbs'] [domain,default to 'eth0']"
+
+PROVIDER=$1
+if [ -z $PROVIDER ]; then
+  PROVIDER='sockets'
+fi
+DOMAIN=$2
+if [ -z $DOMAIN ]; then
+  DOMAIN='eth0'
+fi
 
 # set first pod to be leader; store pod ips and names into array
 idx=0
@@ -27,8 +38,12 @@ do
 done
 
 for (( i=0; i<${#IP_ARRAY[*]}; i++ )); do
+  echo "provider is ${PROVIDER}"
+  echo "domain is ${DOMAIN}"
+  echo "kubectl -n derecho-workspace exec -it ${POD_ARRAY[${i}]} \
+  -- /root/config/config-derecho.sh ${LEADER_IP} ${IP_ARRAY[${i}]} ${i} ${PROVIDER} ${DOMAIN}"
   kubectl -n derecho-workspace exec -it ${POD_ARRAY[${i}]} \
-  -- /root/config/config-derecho.sh ${LEADER_IP} ${IP_ARRAY[${i}]} ${i}
+  -- /root/config/config-derecho.sh ${LEADER_IP} ${IP_ARRAY[${i}]} ${i} ${PROVIDER} ${DOMAIN}
 done
 
 rm info.txt
